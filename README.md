@@ -53,7 +53,7 @@ The tool generates a comprehensive set of CSV files for auditing and offline rev
 * `virtual_repos_config_comparison.csv` (Member list & Deployment parity)
 * `only_in_source_virtual.csv` / `only_in_target_virtual.csv`
 
-##📊 Consolidated Summary Reports
+## 📊 Consolidated Summary Reports
 In addition to the granular audits, the tool generates two high-level consolidated files for a complete overview:
 
 * `repo_comparision_consolidated.csv`: Combines existence and storage metrics for Local, Remote, and Virtual repositories into a single master list.
