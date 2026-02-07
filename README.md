@@ -35,7 +35,7 @@ A high-efficiency automation suite designed to audit and compare repository stat
     ```bash
     ./CompareJPDsRepoConfig.sh <JPD_A_URL> <JPD_B_URL> <USER_A> <TOKEN_A> <USER_B> <TOKEN_B> yes
     ```
-###💡 Understanding the weboutput Argument:
+### 💡 Understanding the weboutput Argument:
 * `yes`: The script will complete the analysis, launch a local Python web server on port 8000, and open the interactive dashboard in your browser. (Requires python3).
 * `no`: The script generates all CSV reports and exits immediately without starting a server.
 
