@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JPD Comparison Master Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 30px; background-color: #f0f2f5; }
+        h1 { text-align: center; color: #2d3748; margin-bottom: 30px; }
+        .section-header { 
+            background: #2d3748; color: white; padding: 15px 20px; 
+            margin-top: 40px; border-radius: 6px 6px 0 0; font-weight: bold; 
+        }
+        .container { background: white; padding: 20px; border-radius: 0 0 6px 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .status-no { background-color: #fff5f5 !important; color: #c53030; }
+        table.dataTable thead th { background-color: #edf2f7; color: #4a5568; }
+    </style>
+</head>
+<body>
+
+    <h1>JPDs Repository Comparison Dashboard</h1>
+
+    <div class="section-header">Local Repository Comparison</div>
+    <div class="container">
+        <table id="localTable" class="display" style="width:100%">
+            <thead>
+                <tr>
+                    <th>LocalRepoName</th>
+                    <th>ExistsInTarget</th>
+                    <th>SourceFilesCount</th>
+                    <th>SourceUsedSpace</th>
+                    <th>TargetFilesCount</th>
+                    <th>TargetUsedSpace</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+    <div class="section-header">Remote Repository Comparison</div>
+    <div class="container">
+        <table id="remoteStorageTable" class="display" style="width:100%">
+            <thead>
+                <tr>
+                    <th>RemoteRepoName</th>
+                    <th>ExistsInTarget</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+    <div class="section-header">Virtual Repository Comparison</div>
+    <div class="container">
+        <table id="virtualStorageTable" class="display" style="width:100%">
+            <thead>
+                <tr>
+                    <th>VirtualRepoName</th>
+                    <th>ExistsInTarget</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+    <div class="section-header">Remote Repository Configuration Comparision Details</div>
+    <div class="container">
+        <table id="remoteConfigTable" class="display" style="width:100%">
+            <thead>
+                <tr>
+                    <th>SourceRepoName</th>
+                    <th>SourceURL</th>
+                    <th>SourcePasswordExists</th>
+                    <th>TargetRepoName</th>
+                    <th>TargetURL</th>
+                    <th>TargetPasswordExists</th>
+                    <th>ExistsInTarget</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+    <div class="section-header">Virtual Repository Configuration Comparision Details</div>
+    <div class="container">
+        <table id="virtualConfigTable" class="display" style="width:100%">
+            <thead>
+                <tr>
+                    <th>SourceRepoName</th>
+                    <th>SourceRepositories</th>
+                    <th>SourceDefaultDeploy</th>
+                    <th>TargetRepoName</th>
+                    <th>TargetRepositories</th>
+                    <th>TargetDefaultDeploy</th>
+                    <th>ExistsInTarget</th>
+                    <th>DifferenceInRepos</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+
+    <script>
+        const csvFiles = {
+            local: "local_repos_comparison.csv",
+            remoteStorage: "remote_repos_comparison.csv",
+            virtualStorage: "virtual_repos_comparison.csv",
+            remoteConfig: "remote_repos_config_comparison.csv",
+            virtualConfig: "virtual_repos_config_comparison.csv"
+        };
+
+        function load(id, file, cols) {
+            Papa.parse(file, {
+                download: true, 
+                header: true, 
+                skipEmptyLines: true,
+                // Remove invisible BOM characters if they exist
+                beforeFirstChunk: function(chunk) {
+                    return chunk.replace(/^\uFEFF/, '');
+                },
+                complete: function(res) {
+                    $(`#${id}`).DataTable({
+                        data: res.data,
+                        columns: cols,
+                        createdRow: function(row, data) {
+                            if (data.ExistsInTarget === "No") $(row).addClass('status-no');
+                        }
+                    });
+                }
+            });
+        }
+
+        // 1. Local Table - Mapping to SourceFilesCount, SourceUsedSpace, etc.
+        load("localTable", csvFiles.local, [
+            {data:"LocalRepoName"}, {data:"ExistsInTarget"}, {data:"SourceFilesCount"}, 
+            {data:"SourceUsedSpace"}, {data:"TargetFilesCount"}, {data:"TargetUsedSpace"}
+        ]);
+
+        // 2. Remote Storage - Mapping to RemoteRepoName
+        load("remoteStorageTable", csvFiles.remoteStorage, [
+            {data:"RemoteRepoName"}, {data:"ExistsInTarget"}
+        ]);
+
+        // 3. Virtual Storage - Mapping to VirtualRepoName
+        load("virtualStorageTable", csvFiles.virtualStorage, [
+            {data:"VirtualRepoName"}, {data:"ExistsInTarget"}
+        ]);
+
+        // 4. Remote Config
+        load("remoteConfigTable", csvFiles.remoteConfig, [
+            {data:"SourceRepoName"}, {data:"SourceURL"}, {data:"SourcePasswordExists"}, {data:"TargetRepoName"}, 
+            {data:"TargetURL"}, {data:"TargetPasswordExists"}, {data:"ExistsInTarget"}
+        ]);
+
+        // 5. Virtual Config - Mapping to SourceRepositories, SourceDefaultDeploy, etc.
+        load("virtualConfigTable", csvFiles.virtualConfig, [
+            {data:"SourceRepoName"}, {data:"SourceRepositories"}, {data:"SourceDefaultDeploy"}, 
+            {data:"TargetRepoName"}, {data:"TargetRepositories"}, {data:"TargetDefaultDeploy"}, 
+            {data:"ExistsInTarget"}, {data:"DifferenceInRepos"}
+        ]);
+    </script>
+</body>
+</html>
