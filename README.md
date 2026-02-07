@@ -1,76 +1,74 @@
-JPD Repository Comparison Tool
-A high-efficiency automation suite designed to audit and compare repository states between two JFrog Platform Deployments (JPDs). This tool identifies discrepancies in Local, Remote, and Virtual repositories to ensure seamless environment parity.
+# JPD Repository Comparison Tool
 
-🚀 Features
-Storage & Count Audit: Provides real-time tracking of existence, file counts, and used space for Local repositories.
+A high-efficiency automation suite designed to audit and compare repository states and configurations between two JFrog Platform Deployments (JPDs). This tool identifies discrepancies in **Local, Remote, and Virtual** repositories to ensure seamless environment parity.
 
-Availability Mapping: Flags repositories present in the Source JPD but missing in the Target JPD across all repository types.
+## 🚀 Features
 
-Configuration Deep-Dive:
+* **Storage & Count Audit:** Real-time tracking of file counts and used space for Local repositories.
+* **Availability Mapping:** Flags repositories present in the Source JPD but missing in the Target.
+* **Configuration Deep-Dive:**
+    * **Remote:** Validates external URLs and checks for configured secrets.
+    * **Virtual:** Compares member repository lists and deployment settings.
+* **Adaptive API Engine:** Automatically detects and handles logic differences between Artifactory 6.x and 7.x.
+* **Interactive Web Dashboard:** Built-in Python-based server for searchable, visual data analysis.
 
-Remote: Validates external Target URLs and detects if authentication passwords/secrets are configured.
+## 📋 Prerequisites
 
-Virtual: Compares member repository lists and identifies differences in default deployment settings.
+* **jq:** Required for JSON parsing.
+* **curl:** Required for API communication.
+* **python3:** Mandatory for serving the HTML Dashboard via the `weboutput` feature.
 
-Adaptive API Engine: Automatically handles internal logic differences between Artifactory 6.x and 7.x.
+## 🛠️ Installation & Usage
 
-Interactive Web Dashboard: Includes a built-in Python-based web server to launch a searchable, sortable HTML interface for immediate visual analysis.
+1.  **Clone the repository:**
+    ```bash
+    git clone [https://github.com/your-username/jpd-repo-comparison.git](https://github.com/your-username/jpd-repo-comparison.git)
+    cd jpd-repo-comparison
+    ```
 
-📋 Prerequisites
-jq: Required for processing JSON data from JFrog APIs.
+2.  **Execute the Comparison:**
+    Pass the credentials directly or via terminal variables for better security.
+    ```bash
+    ./CompareJPDsRepoConfig_6x-7x.sh <JPD_A_URL> <JPD_B_URL> <USER_A> <TOKEN_A> <USER_B> <TOKEN_B> yes
+    ```
 
-curl: Required for secure API communication.
+> **Note on Performance:** If the comparison involves an Artifactory **6.x** instance, the process will take more time. This is due to **architectural limitations** in Artifactory 6.x, which does not provide a direct API to retrieve all repository configurations in a single call. Consequently, the script must fetch details for each repository individually.
 
-python3: Mandatory to serve the HTML Dashboard via the weboutput feature.
+## 📊 Generated Reports
 
-🛠️ Installation & Usage
-Clone the repository:
-
-Bash
-git clone https://github.com/your-username/jpd-repo-comparison.git
-cd jpd-repo-comparison
-Run the comparison script:
-
-Bash
-./CompareJPDsRepoConfig_6x-7x.sh <JPD_A_URL> <JPD_B_URL> <SOURCE_USER> <SOURCE_TOKEN> <TARGET_USER> <TARGET_TOKEN> yes
-
-Note on Performance: If the comparison involves an Artifactory 6.x instance, the process will take more time. This is due to architectural limitations in Artifactory 6.x, which does not provide a direct API to retrieve all repository configurations in a single call. Consequently, the script must fetch details for each repository individually.
-
-📊 Generated Reports
 The tool generates a comprehensive set of CSV files for auditing and offline review:
 
-Local Repositories
-local_repos_comparison.csv (Full metrics)
+### Local Repositories
+* `local_repos_comparison.csv` (Full metrics: File counts, Used space)
+* `only_in_source_local.csv`
+* `only_in_target_local.csv`
 
-only_in_source_local.csv
+### Remote Repositories
+* `remote_repos_comparison.csv`
+* `remote_repos_config_comparison.csv` (Target URL & Password verification)
+* `only_in_source_remote.csv` / `only_in_target_remote.csv`
 
-only_in_target_local.csv
+### Virtual Repositories
+* `virtual_repos_comparison.csv`
+* `virtual_repos_config_comparison.csv` (Member list & Deployment parity)
+* `only_in_source_virtual.csv` / `only_in_target_virtual.csv`
 
-Remote Repositories
-remote_repos_comparison.csv
+## 🖥️ Dashboard Overview
 
-remote_repos_config_comparison.csv (URL & Secret verification)
-
-only_in_source_remote.csv / only_in_target_remote.csv
-
-Virtual Repositories
-virtual_repos_comparison.csv
-
-virtual_repos_config_comparison.csv (Member list & Deployment parity)
-
-only_in_source_virtual.csv / only_in_target_virtual.csv
-
-🖥️ Dashboard Overview
-When weboutput is set to yes, the script initiates a local server and opens the interactive dashboard.
-
-Key Interface Features:
-Visual Highlights: Rows highlighted in red (as seen with anilkt-project-npm-local) immediately signal repositories that do not exist in the Target JPD.
-
-Search & Filter: Built-in DataTables search allows you to filter 360+ entries by repository name or status instantly.
-
-Config Delta Tracking: The Configuration Comparison view (as shown below) tracks if member lists in Virtual repos differ, marked by a DifferenceInRepos flag.
-
-Termination: Simply return to your terminal and press Ctrl+C to shut down the web server.
+When `weboutput` is set to **yes**, the script initiates a local server and opens an interactive dashboard.
 
 
+### Key Interface Features:
+* **Visual Status:** Missing repositories (e.g., `anilkt-project-npm-local`) are highlighted in **red** for immediate identification.
+* **Search & Filter:** Built-in DataTables search allows you to filter through hundreds of entries by repository name or status instantly.
+* **Config Delta Tracking:** The Configuration Comparison view tracks if member lists in Virtual repos differ, marked by a `DifferenceInRepos` flag.
+* **Termination:** Simply return to your terminal and press `Ctrl+C` to shut down the web server when finished.
 
+## 📁 Project Structure
+
+```text
+.
+├── CompareJPDsRepoConfig_6x-7x.sh   # Main execution script
+├── CompareJPDsRepoConfig.html       # Dashboard template
+├── README.md                        # Documentation
+└── .gitignore                       # Excludes temporary JSON/CSV data
