@@ -26,11 +26,18 @@ A high-efficiency automation suite designed to audit and compare repository stat
     cd jpd-repo-comparison
     ```
 
+2. **Access Built-in Help: The script includes a help flag to provide a quick reference for arguments.**
+    ```bash
+    ./CompareJPDsRepoConfig_6x-7x.sh -h
+    ```
 2.  **Execute the Comparison:**
     Pass the credentials directly or via terminal variables for better security.
     ```bash
-    ./CompareJPDsRepoConfig_6x-7x.sh <JPD_A_URL> <JPD_B_URL> <USER_A> <TOKEN_A> <USER_B> <TOKEN_B> yes
+    ./CompareJPDsRepoConfig.sh <JPD_A_URL> <JPD_B_URL> <USER_A> <TOKEN_A> <USER_B> <TOKEN_B> yes
     ```
+###💡 Understanding the weboutput Argument:
+* `yes`: The script will complete the analysis, launch a local Python web server on port 8000, and open the interactive dashboard in your browser. (Requires python3).
+* `no`: The script generates all CSV reports and exits immediately without starting a server.
 
 > **Note on Performance:** If the comparison involves an Artifactory **6.x** instance, the process will take more time. This is due to **architectural limitations** in Artifactory 6.x, which does not provide a direct API to retrieve all repository configurations in a single call. Consequently, the script must fetch details for each repository individually.
 
@@ -75,7 +82,7 @@ When `weboutput` is set to **yes**, the script initiates a local server and open
 
 ```text
 .
-├── CompareJPDsRepoConfig_6x-7x.sh   # Main execution script
+├── CompareJPDsRepoConfig.sh   # Main execution script
 ├── CompareJPDsRepoConfig.html       # Dashboard template
 ├── README.md                        # Documentation
 └── .gitignore                       # Excludes temporary JSON/CSV data
