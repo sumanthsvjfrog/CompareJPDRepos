@@ -86,3 +86,12 @@ When `weboutput` is set to **yes**, the script initiates a local server and open
 ├── CompareJPDsRepoConfig.html       # Dashboard template
 ├── README.md                        # Documentation
 └── .gitignore                       # Excludes temporary JSON/CSV data
+
+## Live Screenshots
+
+<img width="1728" height="396" alt="image" src="https://github.com/user-attachments/assets/fbf90ece-704f-4867-a47f-ad3b5a2b7273" />
+<img width="1721" height="393" alt="image" src="https://github.com/user-attachments/assets/2b1f6241-91fb-4702-8668-e97105a63149" />
+<img width="1724" height="397" alt="image" src="https://github.com/user-attachments/assets/2fa08b29-3db3-4aa0-b653-d789b87a7809" />
+<img width="1728" height="397" alt="image" src="https://github.com/user-attachments/assets/49826394-cc23-41ae-9660-450b1ef75103" />
+<img width="1728" height="476" alt="image" src="https://github.com/user-attachments/assets/289235a2-4aa1-4b4f-99f3-2d24f7e9ef66" />
+
