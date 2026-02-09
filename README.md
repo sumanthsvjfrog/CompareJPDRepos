@@ -86,6 +86,7 @@ When `weboutput` is set to **yes**, the script initiates a local server and open
 ├── CompareJPDsRepoConfig.html       # Dashboard template
 ├── README.md                        # Documentation
 └── .gitignore                       # Excludes temporary JSON/CSV data
+```
 
 ## Live Screenshots
 
