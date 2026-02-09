@@ -61,9 +61,14 @@ fi
 
 GetSourceVersion()
 {
-JPDMainVersion=`curl -s -u "$SOURCE_AUTH" "${JPD_A_URL}/artifactory/api/system/version"  | jq -r '.version' | cut -d "." -f1`
-[ $JPDMainVersion -eq 6 ] && jpd7=no
-[ $JPDMainVersion -eq 7 ] && jpd7=yes
+JPDMainVersion=`curl -s -u "$SOURCE_AUTH" "${JPD_A_URL}/artifactory/api/system/version"  | jq -r '.version'`
+JPDTargetVersion=`curl -s -u "$TARGET_AUTH" "${JPD_B_URL}/artifactory/api/system/version"  | jq -r '.version'`
+echo "SourceJPDVersion,TargetJPDVersion" > JPDVersion.csv
+echo "$JPDMainVersion,$JPDTargetVersion" >> JPDVersion.csv
+JPDMainMajorVersion=`echo $JPDMainVersion  | cut -d "." -f1`
+
+[ $JPDMainMajorVersion -eq 6 ] && jpd7=no
+[ $JPDMainMajorVersion -eq 7 ] && jpd7=yes
 }
 
 LocalReposDetails()
